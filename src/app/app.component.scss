@@ -1,0 +1,42 @@
+.container {
+  min-height: calc(100vh - 77px);
+  display: grid;
+  place-items: center;
+  padding: 20px 0;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+
+  textarea {
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+
+  .prompt {
+    margin-top: 1rem;
+    padding: 5px;
+    background: #ccc;
+    text-align: right;
+  }
+
+  button {
+    width: 100px;
+    border: none;
+    background-color: #7b68ee;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 18px;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+  }
+
+  .response {
+    height: 500px;
+    border: 1px solid gray;
+    overflow-y: scroll;
+    padding: 10px;
+  }
+}
