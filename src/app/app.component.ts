@@ -17,22 +17,27 @@ export class AppComponent {
 
   public prompt = '';
   public promptAsked = '';
+  private model = 'deepseek-r1'; //qwen2.5, deepseek-r1, gemma
 
   public async ask() {
     let responseText = '';
-    try {
-      const streamResponse = await ollama.chat({
-        model: 'deepseek-r1:latest',
-        messages: [{ role: 'user', content: this.prompt }],
-        stream: true,
-      });
-      this.promptAsked = this.prompt;
-      this.prompt = '';
+    if (this.prompt) {
+      try {
+        const streamResponse = await ollama.chat({
+          model: `${this.model}:latest`,
+          messages: [{ role: 'user', content: this.prompt }],
+          stream: true,
+        });
+        this.promptAsked = this.prompt;
+        this.prompt = '';
 
-      for await (const part of streamResponse) {
-        responseText += part.message.content;
-        this.response.nativeElement.innerHTML = marked(responseText);
-      }
-    } catch (error) {}
+        for await (const part of streamResponse) {
+          responseText += part.message.content;
+          this.response.nativeElement.innerHTML = marked(responseText);
+        }
+      } catch (error) {}
+    } else {
+      alert('Ask me anything 😁!');
+    }
   }
 }
