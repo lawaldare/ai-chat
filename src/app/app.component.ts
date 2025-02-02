@@ -31,6 +31,7 @@ export class AppComponent implements OnInit {
 
   public async ask() {
     let responseText = '';
+    this.response.nativeElement.innerHTML = 'thinking...🤔';
     if (this.prompt) {
       try {
         // const streamResponse = await ollama.chat({
