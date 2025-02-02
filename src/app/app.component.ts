@@ -1,11 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 // import ollama from 'ollama';
 import { marked } from 'marked';
 import { NavComponent } from './nav/nav.component';
 
 import { GenerativeModel, GoogleGenerativeAI } from '@google/generative-ai';
+
+interface ChatModel {
+  role: string;
+  parts: {
+    text: string;
+  }[];
+}
 
 @Component({
   selector: 'app-root',
@@ -21,6 +34,8 @@ export class AppComponent implements OnInit {
   public promptAsked = '';
   // private model = 'deepseek-r1'; //qwen2.5, deepseek-r1, gemma
   private googleModel!: GenerativeModel;
+  public history: ChatModel[] = [];
+  public aiResponse = signal('');
 
   ngOnInit(): void {
     const genAI = new GoogleGenerativeAI(
@@ -50,7 +65,21 @@ export class AppComponent implements OnInit {
         // const result = await this.googleModel.generateContent(this.prompt);
         // this.response.nativeElement.innerHTML = marked(result.response.text());
 
-        const chat = this.googleModel.startChat({});
+        const newUserHistory = { role: 'user', parts: [{ text: this.prompt }] };
+
+        this.history.push(newUserHistory);
+
+        const newModelHistory = {
+          role: 'model',
+          parts: [{ text: this.aiResponse() }],
+        };
+
+        this.history.push(newModelHistory);
+
+        const chat = this.googleModel.startChat({
+          history: this.history,
+        });
+
         let result = await chat.sendMessageStream(this.prompt);
 
         this.promptAsked = this.prompt;
@@ -60,6 +89,8 @@ export class AppComponent implements OnInit {
           responseText += part.text();
           this.response.nativeElement.innerHTML = marked(responseText);
         }
+
+        this.aiResponse.set(responseText);
       } catch (error) {}
     } else {
       alert('Ask me anything 😁!');
