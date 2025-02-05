@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
     const genAI = new GoogleGenerativeAI(
       'AIzaSyDfZgIO2jcmQRr-2jB9DnqZP_j3NGVN3D8'
     );
-    this.googleModel = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    this.googleModel = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
   }
 
   public async ask() {
@@ -50,37 +50,26 @@ export class AppComponent implements OnInit {
     this.promptAsked = '';
     if (this.prompt) {
       try {
-        // const streamResponse = await ollama.chat({
-        //   model: `${this.model}:latest`,
-        //   messages: [{ role: 'user', content: this.prompt }],
-        //   stream: true,
+        // const newUserHistory = { role: 'user', parts: [{ text: this.prompt }] };
+
+        // this.history.push(newUserHistory);
+
+        // const newModelHistory = {
+        //   role: 'model',
+        //   parts: [{ text: this.aiResponse() }],
+        // };
+
+        // this.history.push(newModelHistory);
+
+        // const chat = this.googleModel.startChat({
+        //   history: this.history,
         // });
-        // this.promptAsked = this.prompt;
-        // this.prompt = '';
 
-        // for await (const part of streamResponse) {
-        //   responseText += part.message.content;
-        //   this.response.nativeElement.innerHTML = marked(responseText);
-        // }
-        // const result = await this.googleModel.generateContent(this.prompt);
-        // this.response.nativeElement.innerHTML = marked(result.response.text());
+        const result = await this.googleModel.generateContentStream(
+          this.prompt
+        );
 
-        const newUserHistory = { role: 'user', parts: [{ text: this.prompt }] };
-
-        this.history.push(newUserHistory);
-
-        const newModelHistory = {
-          role: 'model',
-          parts: [{ text: this.aiResponse() }],
-        };
-
-        this.history.push(newModelHistory);
-
-        const chat = this.googleModel.startChat({
-          history: this.history,
-        });
-
-        let result = await chat.sendMessageStream(this.prompt);
+        // let result = await chat.sendMessageStream(this.prompt);
 
         this.promptAsked = this.prompt;
         this.prompt = '';
