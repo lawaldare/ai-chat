@@ -32,10 +32,7 @@ export class AppComponent implements OnInit {
 
   public prompt = '';
   public promptAsked = '';
-  // private model = 'deepseek-r1'; //qwen2.5, deepseek-r1, gemma
   private googleModel!: GenerativeModel;
-  public history: ChatModel[] = [];
-  public aiResponse = signal('');
 
   ngOnInit(): void {
     const genAI = new GoogleGenerativeAI(
@@ -50,26 +47,9 @@ export class AppComponent implements OnInit {
     this.promptAsked = '';
     if (this.prompt) {
       try {
-        // const newUserHistory = { role: 'user', parts: [{ text: this.prompt }] };
-
-        // this.history.push(newUserHistory);
-
-        // const newModelHistory = {
-        //   role: 'model',
-        //   parts: [{ text: this.aiResponse() }],
-        // };
-
-        // this.history.push(newModelHistory);
-
-        // const chat = this.googleModel.startChat({
-        //   history: this.history,
-        // });
-
         const result = await this.googleModel.generateContentStream(
           this.prompt
         );
-
-        // let result = await chat.sendMessageStream(this.prompt);
 
         this.promptAsked = this.prompt;
         this.prompt = '';
@@ -78,9 +58,9 @@ export class AppComponent implements OnInit {
           responseText += part.text();
           this.response.nativeElement.innerHTML = marked(responseText);
         }
-
-        this.aiResponse.set(responseText);
-      } catch (error) {}
+      } catch (error) {
+        console.error(error);
+      }
     } else {
       alert('Ask me anything 😁!');
     }
