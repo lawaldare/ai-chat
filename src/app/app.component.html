@@ -6,7 +6,9 @@
       rows="3"
       [(ngModel)]="prompt"
     ></textarea>
-    <button (click)="ask()">Ask</button>
+    <button (click)="ask()" class="animate__animated animate__heartBeat">
+      Ask
+    </button>
     @if(promptAsked.length){
     <p class="prompt">{{ promptAsked }}</p>
     }

@@ -1,13 +1,6 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  signal,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-// import ollama from 'ollama';
 import { marked } from 'marked';
 import { NavComponent } from './nav/nav.component';
 
@@ -63,6 +56,7 @@ export class AppComponent implements OnInit {
       }
     } else {
       alert('Ask me anything 😁!');
+      this.response.nativeElement.innerHTML = '';
     }
   }
 }
